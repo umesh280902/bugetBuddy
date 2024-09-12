@@ -1,14 +1,7 @@
 const userRepository = require("../repositories/userRepository");
-const tempUsersRepository = require("../repositories/tempUsersRepository");
-const { comparePassword, hashPassword } = require("../helpers/passwordHelper");
-const {createToken} = require("../helpers/tokenHelper");
-const sendMail = require("../helpers/sendMail");
-const generateOTP = require("../helpers/otpGenerator");
+const {comparePassword}=require("../helpers/passwordHelper")
+const createToken=require("../middleware/authMiddleware")
 
-// Use the singleton instance of userRepository
-const UserRepository =new userRepository();  // No need to instantiate it again
-
-// Controller functions
 const signupPost = async (req, res) => {
     try {
         const { firstName, lastName, email, password, phoneNumber } = req.body;
@@ -17,14 +10,23 @@ const signupPost = async (req, res) => {
             return res.status(400).json({ message: "Please fill all the details" });
         }
 
-        const user = await UserRepository.getUserByEmail(email);
+        const user = await userRepository.getUserByEmail(email);
         if (user) {
             return res.status(409).json({ message: "User already exists" });
         } else {
-            const OTP = generateOTP();
-            tempUsersRepository.storeTempUsers({ firstName, lastName, email, password, phoneNumber, OTP });
-            sendMail(email, "Email verification", `Hi ${firstName} ${lastName}, your OTP for email verification is ${OTP}`);
-            return res.status(200).json({ message: `OTP has been sent to your email. Please check your email.` });
+            const newUser = await userRepository.createUser({
+                firstName,
+                lastName,
+                email,
+                password, // Ensure that password is hashed before saving
+                phoneNumber
+            });
+            const token = createToken({ userId: newUser._id, email: newUser.email });
+
+            return res.status(201).json({
+                message: "User successfully created",
+                token: token,
+            });
         }
     } catch (error) {
         console.error(error);
@@ -32,42 +34,6 @@ const signupPost = async (req, res) => {
     }
 };
 
-const emailVerification = async (req, res) => {
-    try {
-        const { email, otp } = req.body;
-        if (!email || !otp) {
-            return res.status(400).json({ message: "Please provide email and OTP" });
-        }
-
-        const tempUser = tempUsersRepository.getTempUserByEmail(email);
-        if (!tempUser || tempUser.OTP !== otp) {
-            return res.status(400).json({ message: "Invalid OTP" });
-        }
-
-        const { firstName, lastName, password, phoneNumber } = tempUser;
-
-        const newUser = await UserRepository.createUser({
-            firstName,
-            lastName,
-            email,
-            password,  // Ensure password is hashed
-            phoneNumber
-        });
-
-        tempUsersRepository.deleteTempUser(email);
-
-        const token = createToken({ userId: newUser._id, email: newUser.email });
-
-        return res.status(201).json({
-            message: "User successfully created",
-            token: token,
-        });
-
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Server error" });
-    }
-};
 
 const loginPost = async (req, res) => {
     try {
@@ -77,7 +43,7 @@ const loginPost = async (req, res) => {
             return res.status(400).json({ message: "Please provide email and password" });
         }
 
-        const user = await UserRepository.getUserByEmail(email);
+        const user = await userRepository.getUserByEmail(email);
         if (!user) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
@@ -99,6 +65,7 @@ const loginPost = async (req, res) => {
     }
 };
 
+
 const changePassword = async (req, res) => {
     try {
         const { oldPassword, newPassword } = req.body;
@@ -108,7 +75,7 @@ const changePassword = async (req, res) => {
             return res.status(400).json({ message: "Please provide both old and new passwords" });
         }
 
-        const user = await UserRepository.getUserById(userId);
+        const user = await userRepository.getUserById(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -118,8 +85,8 @@ const changePassword = async (req, res) => {
             return res.status(401).json({ message: "Old password is incorrect" });
         }
 
-        const hashedNewPassword = await hashPassword(newPassword);
-        await UserRepository.updatePassword(userId, hashedNewPassword);
+        // Ensure the new password is hashed before saving
+        await userRepository.updatePassword(userId, newPassword);
 
         return res.status(200).json({ message: "Password successfully updated" });
     } catch (error) {
@@ -128,9 +95,12 @@ const changePassword = async (req, res) => {
     }
 };
 
+
 const logout = (req, res) => {
     try {
-        res.clearCookie("token");
+        // Clear the token stored on the client-side
+        // In React Native, this would be handled via AsyncStorage on the app side
+        res.clearCookie("token"); // If using cookies on the backend side
 
         return res.status(200).json({ message: "Logout successful" });
     } catch (error) {
@@ -139,10 +109,10 @@ const logout = (req, res) => {
     }
 };
 
+
 module.exports = {
     signupPost,
     loginPost,
     changePassword,
-    emailVerification,
     logout,
 };

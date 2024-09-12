@@ -75,4 +75,4 @@ class userRepository {
     }
 }
 
-module.exports = userRepository;
+module.exports = new userRepository();

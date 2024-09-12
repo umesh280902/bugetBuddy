@@ -1,31 +1,10 @@
-const { authenticateToken } = require("../helpers/tokenHelper");
+const jwt = require("jsonwebtoken"); // Import JSON Web Token
+const secretKey = process.env.SECRETKEY; // Replace with your actual secret key
 
-const authentication = async (req, res, next) => {
-  try {
-    // Get the token from the Authorization header
-    const authenticationHeader = req.headers["authorization"];
-    const token = authenticationHeader && authenticationHeader.split(' ')[1];
+const createToken=({userId,email})=>{
+    return jwt.sign({userId:userId,email:email},secretKey,{
+        expiresIn:"14d"
+    })
+}
 
-    if (token == null) {
-      return res.status(401).json({ message: "Token not provided" });
-    }
-
-    // Authenticate the token
-    const authorizedToken = await authenticateToken(token);
-
-    if (!authorizedToken) {
-      return res.status(401).json({ message: "Invalid token, please login again" });
-    }
-
-    // Add the user information to the request object
-    req.user = authorizedToken;
-
-    // Proceed to the next middleware or route handler
-    next();
-  } catch (error) {
-    console.log(`Error occurred: ${error.message}`);
-    return res.status(500).json({ message: "Server error" });
-  }
-};
-
-module.exports = authentication;
+module.exports=createToken
