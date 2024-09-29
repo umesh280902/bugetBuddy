@@ -1,6 +1,7 @@
 var mongoose=require("mongoose")
-var dateGenerator=require("../helpers/dateGenerator")
+var {dateGenerator}=require("../helpers/dateGenerator")
 
+const categoryEnum=["food", "entertainment", "tour/travel", "fashion", "academics", "others"]
 
 const transactionSchema = new mongoose.Schema({
     Amount: {
@@ -24,11 +25,11 @@ const transactionSchema = new mongoose.Schema({
     category: {
         type: String,
         required:true,
-        enum: ["food", "entertainment", "tour/travel", "fashion", "academics", "others"]
+        enum: categoryEnum
     }
 }, {
     timestamps: true
 });
 
-
-module.exports=mongoose.model("Transactions",transactionSchema)
+const transactionsModel=mongoose.model("Transactions",transactionSchema)
+module.exports={transactionsModel,categoryEnum}

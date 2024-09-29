@@ -3,7 +3,6 @@ require("dotenv").config(); // Load environment variables from .env file
 
 const username=process.env.USER
 const password=process.env.PASSWORD
-console.log(username,password)
 const mailTransporter = nodemailer.createTransport({
   service: "gmail",
   auth: {

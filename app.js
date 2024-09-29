@@ -8,17 +8,13 @@ const connection = require("./config/db"); // Import here but don't execute
 const authRouter = require("./routes/auth");
 const transactionRouter = require("./routes/transactions");
 const app = express();
-
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/", (req, res) => {
-  res.send("Hello from the Melody team");
-  console.log("Hello from the Melody team");
-});
+
 app.use("/auth", authRouter);
 app.use("/transactions", transactionRouter);
 app.use(function (req, res, next) {

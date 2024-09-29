@@ -1,3 +1,18 @@
+const monthNames=[
+    "January",
+    "February",
+    "March",
+    "April",
+    "June",
+    "May",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+]
+
 const dateGenerator=()=>{
     const date=new Date()
 
@@ -7,19 +22,7 @@ const dateGenerator=()=>{
     hours=hours%12||12;
 
     const day=date.getDate();
-    const monthNames=[
-        "January",
-        "Feburary",
-        "March",
-        "April",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-    ]
+   
     const month=monthNames[date.getMonth()]
     const year=date.getFullYear();
 
@@ -27,4 +30,6 @@ const dateGenerator=()=>{
 
 }
 
-module.exports=dateGenerator
+
+
+module.exports={dateGenerator,monthNames}

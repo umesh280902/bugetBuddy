@@ -7,6 +7,12 @@ const createToken=({userId,email})=>{
     })
 }
 
+const createTokenForPassword=({userId,email})=>{
+    return jwt.sign({userId:userId,email:email},secretKey,{
+        expiresIn:"1h"
+    })
+}
+
 const authenticateToken=(token)=>{
 return new Promise((resolve,reject)=>{
     jwt.verify(token,secretKey,(err,user)=>{
@@ -20,4 +26,4 @@ return new Promise((resolve,reject)=>{
 }
 
 
-module.exports={createToken,authenticateToken}
+module.exports={createToken,createTokenForPassword,authenticateToken}
