@@ -1,4 +1,4 @@
-const userRepository = require("./userRepository");
+const userRepository = require("./Users/userRepository");
 
 class tempUsersRepository extends userRepository {
     constructor() {

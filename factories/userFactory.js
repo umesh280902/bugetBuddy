@@ -1,5 +1,5 @@
 const { faker } = require('@faker-js/faker');
-const userRepository = require('../repositories/userRepository');
+const userRepository = require('../repositories/Users/userRepository');
 const UserRepository = new userRepository();
 
 const createDummyUsers = async () => {

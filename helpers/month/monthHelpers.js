@@ -1,4 +1,4 @@
-var { monthNames } = require("./dateGenerator");
+var { monthNames } = require("../date/dateGenerator");
 
 const monthSorter = (transactions) => {
     let monthlyTotals = {};

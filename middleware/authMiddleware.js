@@ -1,4 +1,4 @@
-const { authenticateToken } = require("../helpers/tokenHelper");
+const { authenticateToken } = require("../helpers/token/tokenHelper");
 
 const authentication = async (req, res, next) => {
   try {

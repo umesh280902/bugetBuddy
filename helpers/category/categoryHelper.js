@@ -1,4 +1,4 @@
-var dummyData=require("./dateDummy")
+var dummyData=require("../date/dateDummy")
 function categoryHelper(transactions){
     let transact={}
     transactions.forEach(transaction => {

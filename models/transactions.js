@@ -1,5 +1,5 @@
 var mongoose=require("mongoose")
-var {dateGenerator}=require("../helpers/dateGenerator")
+var {dateGenerator}=require("../helpers/date/dateGenerator")
 
 const categoryEnum=["food", "entertainment", "tour/travel", "fashion", "academics", "others"]
 

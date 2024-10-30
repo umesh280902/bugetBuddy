@@ -4,9 +4,9 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const createError = require("http-errors");
-const connection = require("./config/db"); // Import here but don't execute
-const authRouter = require("./routes/auth");
-const transactionRouter = require("./routes/transactions");
+const connection = require("./config/db"); 
+const authRouter = require("./routes/auth/auth");
+const transactionRouter = require("./routes/transactions/transactions");
 const app = express();
 app.use(logger("dev"));
 app.use(express.json());
