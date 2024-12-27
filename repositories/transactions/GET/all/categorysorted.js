@@ -1,5 +1,5 @@
 const categoryHelper = require("../../../../helpers/category/categoryHelper");
-const { transactionsModel } = require("../../../../models/transactions");
+const { transactionsModel } = require("../../../../models/transactions/transactions");
 // Get all transactions for a user and sort them by category
 async function categorysorted(userId) {
   try {

@@ -1,5 +1,5 @@
 var mongoose = require("mongoose");
-var { hashPassword } = require("../helpers/password/passwordHelper");
+var { hashPassword } = require("../../helpers/password/passwordHelper");
 
 const userSchema = new mongoose.Schema({
     firstName: {

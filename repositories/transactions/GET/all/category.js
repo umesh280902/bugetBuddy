@@ -1,4 +1,4 @@
-const { transactionsModel } = require("../../../../models/transactions");
+const { transactionsModel } = require("../../../../models/transactions/transactions");
 
 // Get transactions for a specific category and user
 async function categoryFilter(category, userId) {

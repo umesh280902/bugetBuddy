@@ -1,9 +1,8 @@
 const { faker } = require("@faker-js/faker");
-const UserModel = require("../models/user");
-const { categoryEnum } = require("../models/transactions"); 
-const transactionRepository = require("../repositories/transactionsRepository");
+const UserModel = require("../models/user/user");
+const { categoryEnum } = require("../models/transactions/transactions"); 
+const TransactionRepository = require("../repositories/transactions/TransactionsRepository");
 
-const TransactionRepository = new transactionRepository();
 
 const getRandomUserId = async () => {
   const users = await UserModel.find({});
@@ -23,7 +22,7 @@ const transactionFactory = async () => {
     category: getRandomCategory(), 
   };
 
-  await TransactionRepository.createTransaction(data);
+  await TransactionRepository.createTransactions(data);
 };
 
 module.exports = transactionFactory;

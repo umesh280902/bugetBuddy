@@ -5,19 +5,19 @@ const os = require("os");
 const app = require("../app");
 const debug = require("debug")("financeapp:server");
 const http = require("http");
-const seedUsers = require("../seeders/userSeeders");
-
 const numCpus = os.cpus().length;
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 if (cluster.isMaster) {
+  
   console.log(`Master ${process.pid} is running`);
 
   // Start the server before seeding
   for (let i = 0; i < numCpus; i++) {
     console.log(`Forking worker ${i + 1}`);
     cluster.fork();
+    
   }
 
 

@@ -1,11 +1,11 @@
 const monthSorter = require("../../../../helpers/month/monthHelpers");
-const { transactionsModel } = require("../../../../models/transactions");
+const { transactionsModel } = require("../../../../models/transactions/transactions");
 
 // Get total spent for each month for a user
 async function MonthSum(userId) {
   try {
     const transact = await transactionsModel.find({ userId: userId });
-    console.log(transact);
+    console.log("The response is ",transact);
     const transactions = monthSorter(transact); // Sort transactions by month
     return transactions;
   } catch (error) {

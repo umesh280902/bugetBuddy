@@ -1,4 +1,4 @@
-const { transactionsModel } = require("../../../../models/transactions");
+const { transactionsModel } = require("../../../../models/transactions/transactions");
 // Get transactions based on amount
 async function Amount(amount){
   try {

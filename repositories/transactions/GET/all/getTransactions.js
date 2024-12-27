@@ -1,4 +1,4 @@
-const { transactionsModel } = require("../../../../models/transactions");
+const { transactionsModel } = require("../../../../models/transactions/transactions");
 
 // Get all transactions for a user by userId
 async function getTransactions(userId) {

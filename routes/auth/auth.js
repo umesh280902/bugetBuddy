@@ -5,7 +5,7 @@ var auth=require("../../controllers/auth/auth")
 Router.post("/login",auth.loginPost)
 //Router.post("/email-verification",emailVerification)
 Router.post("/reset-password-token",auth.resetPasswordToken)
-Router.post("/signup",auth.signupPost)
+Router.post("/signup",auth.signupPost) 
 Router.post("/change-password",auth.changePassword)
 Router.post("/logout",auth.logout)
 

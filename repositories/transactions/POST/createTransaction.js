@@ -1,4 +1,4 @@
-const { transactionsModel } = require("../../../models/transactions");
+const { transactionsModel } = require("../../../models/transactions/transactions");
 // Create a new transaction
 async function createTransactions(transaction) {
   const newTransaction = new transactionsModel(transaction);

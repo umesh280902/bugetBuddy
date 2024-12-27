@@ -1,7 +1,7 @@
 const TransactionRepository=require("./GET/all/TransactionRepository")
 const SingleMonthRepository=require("./GET/single/singleMonthRepository")
 const createTransactions=require("./POST/createTransaction")
-
+const allTransactions=require("./DELETE/alltransactions")
 class TransactionsRepository{
     constructor(){
         this.transactionRepository= new TransactionRepository()
@@ -9,6 +9,10 @@ class TransactionsRepository{
     }
     async createTransactions(transaction){
         return await createTransactions(transaction)
+    }
+
+    async deleteTransactions(){
+        return await allTransactions()
     }
 
     get all(){

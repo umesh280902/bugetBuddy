@@ -12,7 +12,6 @@ const allTransaction = async (req, res) => {
       await TransactionsRepository.transactionRepository.getTransactions(
         userId
       );
-    console.log(transactions);
     res.status(200).json(transactions);
   } catch (error) {
     console.log(error);

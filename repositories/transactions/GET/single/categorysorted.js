@@ -1,5 +1,5 @@
 const categoryHelper = require("../../../../helpers/category/categoryHelper");
-const { transactionsModel } = require("../../../../models/transactions");
+const { transactionsModel } = require("../../../../models/transactions/transactions");
 const getTransactions = require("./getTransactions");
 
 // Get transactions for a specific month, sorted by category
