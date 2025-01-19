@@ -3,29 +3,39 @@ const BudgetRepository = require("../../../repositories/budget/budgetRepository"
 async function updateByMonth(req, res) {
   try {
     const { month, year, budget } = req.body;
+
+    // Validate required fields
     if (!month || !year || !budget) {
-      return res.status(400).json("Please provide month year and budget.");
+      return res
+        .status(400)
+        .json({ message: "Please provide month, year, and budget." });
     }
 
     const { userId } = req.user;
+
+    // Validate user authentication
     if (!userId) {
-      return res.status(401).json("Please login again");
+      return res
+        .status(401)
+        .json({ message: "Unauthorized. Please login again." });
     }
 
-    const upd = await BudgetRepository.updateByMonth(
-      userId,
-      month,
-      year,
-      budget
-    );
+    // Update the budget
+    const updatedBudget = await BudgetRepository.updateByMonth(userId, month, year, budget);
 
-    if (!upd) {
+    // Handle update result
+    if (!updatedBudget) {
       return res
         .status(404)
-        .json(`Budget update failed for the month ${month} and year ${year}`);
+        .json({ message: `Budget not found for ${month} ${year}.` });
     }
+
+    return res
+      .status(200)
+      .json({ message: `Budget updated successfully for ${month} ${year}.` });
   } catch (error) {
-    res.status(500).json("Internal Server Error");
+    console.error("Error updating budget:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 }
 

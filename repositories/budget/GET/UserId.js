@@ -1,17 +1,18 @@
 const budgetModel=require("../../../models/budget/budget")
 
-async function UserId(userId){
-    try{
-        const Month=await budgetModel.find({
-            userId:userId,
-        })
-        if(!Month){
-            return `Cannot find the budget for the given user`
+async function UserId(userId) {
+    try {
+        const budgets = await budgetModel.find({
+            userId: userId
+        });
+
+        if (budgets.length === 0) {
+            return `No budgets found for the user with ID: ${userId}`;
         }
-        return Month
-    }catch(error){
-        throw new Error(`Error finding budget for the given user`)
+        return budgets;
+    } catch (error) {
+        throw new Error(`Error finding budgets for the user with ID: ${userId} - ${error.message}`);
     }
 }
 
-module.exports=UserId
+module.exports = UserId;

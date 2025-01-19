@@ -22,5 +22,10 @@ const budgetSchema = new mongoose.Schema({
     timestamps: true
 });
 
+
+budgetSchema.post("find", function (results) {
+    results.reverse()
+});
+
 const budgetModel = mongoose.model("Budget", budgetSchema);
 module.exports = budgetModel;

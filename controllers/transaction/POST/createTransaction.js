@@ -1,26 +1,41 @@
 const TransactionsRepository=require("../../../repositories/transactions/TransactionsRepository")
 // POST: Create a new transaction
 const postTransaction = async (req, res) => {
-    try {
-      const { userId } = req.user;
-      const { Amount, To, category } = req.body;
-  
-      if (!Amount || !To || !category) {
-        return res.status(400).json({ message: "Please fill the required details" });
-      }
-  
-      await TransactionsRepository.createTransactions({
-        Amount,
-        To,
-        userId,
-        category,
-      });
-  
-      res.status(200).json({ message: "Transaction added" });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({ message: "Server error" });
+  try {
+    const { userId } = req.user; // Assume `userId` is available in `req.user`
+    const { Amount, type, To, category, From, isSelfCredit } = req.body;
+
+    // Validate required fields
+    if (!Amount || !type || !category) {
+      return res.status(400).json({ message: "Please fill the required details." });
     }
-  };
-  
-module.exports=postTransaction
+
+    // Validate `To` for debit transactions
+    if (type === "debit" && !To) {
+      return res.status(400).json({ message: "'To' field is required for debit transactions." });
+    }
+
+    // Validate `From` for credit transactions
+    if (type === "credit" && !isSelfCredit && !From) {
+      return res.status(400).json({ message: "'From' field is required for credit transactions unless it is self-credit." });
+    }
+
+    // Create the transaction
+    await TransactionsRepository.createTransactions({
+      Amount,
+      type,
+      userId,
+      category,
+      To: type === "debit" ? To : undefined,
+      From: type === "credit" ? From : undefined,
+      isSelfCredit: type === "credit" ? !!isSelfCredit : false, // Ensure boolean value
+    });
+
+    res.status(200).json({ message: "Transaction added successfully." });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error." });
+  }
+};
+
+module.exports = postTransaction;

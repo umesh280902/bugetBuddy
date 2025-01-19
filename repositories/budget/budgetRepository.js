@@ -5,6 +5,7 @@ const Budget = require("./GET/Budget");
 const UserId = require("./GET/UserId");
 const Year = require("./GET/Year");
 const setBudget = require("./POST/setBudget");
+const allBudgets=require("./DELETE/All.js")
 
 class BudgetRepository {
   async setBudget(budget) {
@@ -30,6 +31,10 @@ class BudgetRepository {
   }
   async deleteByMonth(userId, month, year) {
     return await deleteByMonth(userId, month, year);
+  }
+
+  async allBudgets(){
+    return await allBudgets();
   }
 }
 

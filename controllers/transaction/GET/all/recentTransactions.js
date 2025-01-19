@@ -12,7 +12,7 @@ const RecentTransaction = async (req, res) => {
 
     const transactions = (
       await TransactionsRepository.transactionRepository.getTransactions(userId)
-    ).reverse();
+    );
 
     const recentTransactions =
       transactions.length > 5 ? transactions.slice(0, 5) : transactions;

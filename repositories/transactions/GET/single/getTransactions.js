@@ -5,7 +5,7 @@ async function getTransactions(month, year, userId) {
     const transactions = await transactionsModel.find({ userId: userId });
     console.log(transactions)
     const transact = monthSetter(transactions, month, year);
-    return transact.reverse();
+    return transact;
   } catch (error) {
     throw new Error(
       `Error finding transactions for month ${month} and year ${year}: ${error.message}`

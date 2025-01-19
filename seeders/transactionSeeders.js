@@ -1,4 +1,4 @@
-const transactionFactory = require("../factories/transactionFactory");
+const transactionFactory = require("../factories/transactions/transactionFactory");
 const TransactionsRepository=require("../repositories/transactions/TransactionsRepository")
 
 const seedTransactions = async (n) => {
