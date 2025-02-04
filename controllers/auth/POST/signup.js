@@ -1,5 +1,8 @@
-const { createToken } = require("../../../helpers/token/tokenHelper");
 const userRepository=require("../../../repositories/Users/userRepository")
+const generateOTP=require("../../../helpers/otp/otpGenerator")
+const sendMail=require("../../../helpers/mail/sendMail")
+const tempUserRepository=require("../../../repositories/tempUser/tempUserRepository")
+const { StatusCodes } = require("http-status-codes")
 const UserRepository=new userRepository()
 // Controller functions
 const signupPost = async (req, res) => {
@@ -14,19 +17,18 @@ const signupPost = async (req, res) => {
       if (user) {
         return res.status(409).json({ message: "User already exists" });
       } else {
-        const newUser = await UserRepository.createUser({
+        const otp=generateOTP();
+        const user={
           firstName,
           lastName,
           email,
           password,
           phoneNumber,
-        });
-  
-        const token = createToken({ userId: newUser._id, email: newUser.email });
-        return res.status(201).json({
-          message: "User successfully created",
-          token: token,
-        });
+          otp
+        }
+        tempUserRepository.setTempUser(user);
+        sendMail(email,"Otp for registration",`Hi ${firstName} ${lastName} your otp for the registration on Budget Buddy is as follow ${otp}`)
+        return res.status(StatusCodes.OK).json({message:"Otp has been sent to your mail. Please check your email"})
       }
     } catch (error) {
       console.error(error);

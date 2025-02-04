@@ -1,4 +1,4 @@
-const TransactionsRepository = require("../../../../repositories/transactions/TransactionsRepository");
+const TransactionsRepository=require("../../../../repositories/transactions/TransactionsRepository")
 
 // GET: Fetch transactions based on month and year
 const getTransactions = async (req, res) => {

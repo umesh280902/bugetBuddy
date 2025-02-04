@@ -1,5 +1,5 @@
 const { faker } = require("@faker-js/faker");
-const TransactionRepository = require("../../repositories/transactions/TransactionsRepository");
+const TransactionRepository = require("../repository/TransactionsRepository");
 const getRandomCategory = require("./category");
 const getRandomUserId = require("./userId");
 const getRandomType = require("./type");

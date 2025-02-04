@@ -8,6 +8,7 @@ const connection = require("./config/db");
 const authRouter = require("./routes/auth/auth");
 const transactionRouter = require("./routes/transactions/transactions");
 const budgetRouter=require("./routes/budget/budget")
+const verificationRouter=require("./routes/emailVerification/POST/otp")
 const app = express();
 app.use(logger("dev"));
 app.use(express.json());
@@ -17,6 +18,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 app.use("/auth", authRouter);
+app.use("/email-verification",verificationRouter)
 app.use("/transactions", transactionRouter);
 app.use("/budget",budgetRouter)
 app.use(function (req, res, next) {
