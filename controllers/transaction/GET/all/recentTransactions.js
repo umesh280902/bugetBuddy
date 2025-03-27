@@ -1,7 +1,7 @@
 const TransactionsRepository = require("../../../../repositories/transactions/TransactionsRepository");
 
 // GET: Fetch the latest 5 transactions for the user
-const RecentTransaction = async (req, res) => {
+const RecentTransaction = async (req, res,next) => {
   try {
     const { userId } = req.user;
     if (!userId) {
@@ -19,8 +19,7 @@ const RecentTransaction = async (req, res) => {
 
     return res.status(200).json(recentTransactions);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Server error" });
+    next(error)
   }
 };
 

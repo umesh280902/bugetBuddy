@@ -1,6 +1,6 @@
 const TransactionsRepository = require("../../../../repositories/transactions/TransactionsRepository");
 // GET: Fetch transactions based on user ID
-const allTransaction = async (req, res) => {
+const allTransaction = async (req, res,next) => {
   try {
     const { userId } = req.user;
     if (!userId) {
@@ -14,8 +14,7 @@ const allTransaction = async (req, res) => {
       );
     res.status(200).json(transactions);
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Server error" });
+    next(error)
   }
 };
 

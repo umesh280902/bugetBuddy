@@ -1,7 +1,7 @@
 const TransactionsRepository=require("../../../../repositories/transactions/TransactionsRepository")
 
 // GET: Fetch transactions based on month, year, and category
-const CategoryMonth = async (req, res) => {
+const CategoryMonth = async (req, res,next) => {
   try {
     const { month, year, category } = req.query;
     const { userId } = req.user;
@@ -27,8 +27,7 @@ const CategoryMonth = async (req, res) => {
       );
     res.status(200).json(transactions);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
+    next(error)
   }
 };
 

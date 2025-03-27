@@ -1,6 +1,6 @@
 const TransactionsRepository=require("../../../repositories/transactions/TransactionsRepository")
 // POST: Create a new transaction
-const postTransaction = async (req, res) => {
+const postTransaction = async (req, res,next) => {
   try {
     const { userId } = req.user; // Assume `userId` is available in `req.user`
     const { Amount, type, To, category, From, isSelfCredit } = req.body;
@@ -33,8 +33,7 @@ const postTransaction = async (req, res) => {
 
     res.status(200).json({ message: "Transaction added successfully." });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error." });
+    next(error)
   }
 };
 

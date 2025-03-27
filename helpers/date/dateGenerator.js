@@ -22,7 +22,6 @@ const dateGenerator = (inputDate) => {
     const day = date.getDate();
     const month = monthNames[date.getMonth()];
     const year = date.getFullYear();
-    console.log(`${hours}:${minutes} ${ampm} ${day} ${month} ${year}`)
     return `${hours}:${minutes} ${ampm} ${day} ${month} ${year}`;
 };
 

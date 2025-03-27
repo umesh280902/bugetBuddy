@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const {categoryEnum}=require("../transactions/transactions")
 
 const budgetSchema = new mongoose.Schema({
     userId: {
@@ -14,9 +15,18 @@ const budgetSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    Budget: {
-        type: Number,
-        required: true
+    // Budget: {
+    //     type: Number,
+    //     required: true
+    // },
+    // category:{
+    //     type:String,
+    //     required:true,
+    //     enum:categoryEnum
+    // },
+    TotalBudget:{
+        type:Number,
+        required:true
     }
 }, {
     timestamps: true

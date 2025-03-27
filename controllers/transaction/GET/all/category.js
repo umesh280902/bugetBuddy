@@ -1,7 +1,7 @@
 const TransactionsRepository = require("../../../../repositories/transactions/TransactionsRepository");
 
 // GET: Fetch transactions by category
-const Category = async (req, res) => {
+const Category = async (req, res,next) => {
   try {
     const { category } = req.query;
     const { userId } = req.user;
@@ -23,8 +23,7 @@ const Category = async (req, res) => {
       );
     res.status(200).json(transactions);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
+    next(error)
   }
 };
 

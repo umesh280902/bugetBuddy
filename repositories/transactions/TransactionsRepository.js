@@ -1,18 +1,20 @@
 const TransactionRepository=require("./GET/all/TransactionRepository")
 const SingleMonthRepository=require("./GET/single/singleMonthRepository")
-const createTransactions=require("./POST/createTransaction")
-const allTransactions=require("./DELETE/alltransactions")
+const {transactionsModel}=require("../../models/transactions/transactions")
 class TransactionsRepository{
     constructor(){
         this.transactionRepository= new TransactionRepository()
         this.singleMonthRepository=new SingleMonthRepository()
     }
     async createTransactions(transaction){
-        return await createTransactions(transaction)
+        const newTransaction = new transactionsModel(transaction);
+        const savedTransaction = await newTransaction.save();
+        return savedTransaction;
     }
 
     async deleteTransactions(){
-        return await allTransactions()
+        await transactionsModel.deleteMany()
+        console.log("transactions deleted")
     }
 
     get all(){
@@ -24,5 +26,7 @@ class TransactionsRepository{
     }
 
 }
+
+
 
 module.exports=new TransactionsRepository()

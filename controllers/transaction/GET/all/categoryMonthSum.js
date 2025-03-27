@@ -1,8 +1,9 @@
-const { nextTick } = require("process");
 const TransactionsRepository = require("../../../../repositories/transactions/TransactionsRepository");
-const Amount = async (req, res,next) => {
+
+// GET: Fetch transactions by category
+const categoryMonthSum = async (req, res, next) => {
   try {
-    const { amount } = req.query;
+    const { category } = req.query;
     const { userId } = req.user;
 
     if (!userId) {
@@ -11,12 +12,19 @@ const Amount = async (req, res,next) => {
         .json({ message: "Unauthorized. Please login again." });
     }
 
+    if (!category) {
+      return res.status(400).json({ message: "Category is required" });
+    }
+
     const transactions =
-      await TransactionsRepository.transactionRepository.Amount(amount);
+      await TransactionsRepository.transactionRepository.categoryMonthSum(
+        category,
+        userId
+      );
     res.status(200).json(transactions);
   } catch (error) {
     next(error)
   }
 };
 
-module.exports = Amount;
+module.exports = categoryMonthSum;

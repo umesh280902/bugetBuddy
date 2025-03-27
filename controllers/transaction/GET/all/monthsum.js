@@ -1,7 +1,7 @@
 const TransactionsRepository = require("../../../../repositories/transactions/TransactionsRepository");
 
 // GET: Fetch sum of all transactions for each month
-const MonthSum = async (req, res) => {
+const MonthSum = async (req, res, next) => {
   try {
     const { userId } = req.user;
 
@@ -13,10 +13,10 @@ const MonthSum = async (req, res) => {
 
     const monthlySum =
       await TransactionsRepository.transactionRepository.MonthSum(userId);
-    res.status(200).json(monthlySum);
+    return res.status(200).json(monthlySum);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Server error" });
+    console.log(error)
+    next(error)
   }
 };
 

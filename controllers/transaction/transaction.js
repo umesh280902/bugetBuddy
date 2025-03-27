@@ -9,8 +9,8 @@ class transaction{
         this.all=new All()
     }
     
-    async postTransaction(req,res){
-        return await postTransaction(req,res)
+    async postTransaction(req,res,next){
+        return await postTransaction(req,res,next)
     }
 
 }
