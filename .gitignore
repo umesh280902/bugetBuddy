@@ -3,5 +3,4 @@ node_modules
 .env
 trained_model
 upload
-ocr.py
 frontend

@@ -10,10 +10,10 @@ const transactionRouter = require("./routes/transactions/transactions");
 const budgetRouter=require("./routes/budget/budget")
 const verificationRouter=require("./routes/emailVerification/POST/otp")
 const errorHandler=require("./middleware/errorHandler")
-const multer=require("multer")
+const pythonScript = './ocr.py';
 const app = express();
-
-
+const multer = require("multer");
+const { spawn } = require('child_process');
 var name = "";
 
 const storage = multer.diskStorage({
