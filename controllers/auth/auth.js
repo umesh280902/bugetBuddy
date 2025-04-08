@@ -3,12 +3,18 @@ const loginPost=require("./POST/login")
 const logout=require("./POST/logout")
 const resetPasswordToken=require("./POST/resetPasswordToken")
 const signupPost=require("./POST/signup")
+const emailGet=require("./GET/email")
 
 class auth{
     
     async loginPost(req,res){
         return await loginPost(req,res)
     }
+
+    async emailGet(req,res){
+        return await emailGet(req,res)
+    }
+    
 
     async signupPost(req,res){
         return await signupPost(req,res)
