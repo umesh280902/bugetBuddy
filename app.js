@@ -30,10 +30,10 @@ const upload = multer({ storage });
 app.post("/upload", upload.single('img'), (req, res) => {
   console.log("Image Uploading")
   var dis=""
-  const childProcess = spawn('python', [pythonScript, name]);
+  const childProcess = spawn('python3', [pythonScript, name]);
   childProcess.stdout.on('data', (data) => {
     dis=data.toString();
-    console.log(data.toString());
+    console.log("Dis Output",dis);
     // res.send({"disease":dis})
   });
   
@@ -43,10 +43,33 @@ app.post("/upload", upload.single('img'), (req, res) => {
   
   childProcess.on('close', (code) => {
     console.log(`Child process exited with code ${code}`);
-    res.send({"OCR Output":dis})
+    console.log("Inside Close: ",dis);
+    try {
+      const parsed = JSON.parse(dis);
+
+      const prediction = parsed?.predictions?.[0]; // get the first prediction object
+      if (!prediction) {
+        return res.status(400).json({ error: "No predictions found." });
+      }
+
+      const result = {
+        supplier_name: prediction.supplier_name,
+        total_amount: prediction.total_amount,
+        category: prediction.category,
+        sub_category: prediction.sub_category,
+        date: prediction.date,
+        time: prediction.time,
+        supplier_address: prediction.supplier_address,
+        locale: prediction.locale,
+      };
+      console.log("Result: ",result);
+      res.send(result); 
+    } catch (err) {
+      console.error("JSON parsing error:", err.message);
+      res.status(500).send({ error: "Failed to parse OCR output." });
+    }
   });
 })
-
 
 app.use(logger("dev"));
 app.use(express.json());
