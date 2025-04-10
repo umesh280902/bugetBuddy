@@ -2,13 +2,27 @@ const BudgetRepository = require("../../../repositories/budget/budgetRepository"
 
 async function setBudget(req, res) {
   try {
-    const { budget, month, year } = req.body;
+    const {
+      food,
+      entertainment,
+      tourTravel,
+      fashion,
+      academics,
+      Budget
+    } = req.body;
 
-    // Validate required fields
-    if (!budget || !month || !year) {
+    // Properly validate for undefined (allows 0)
+    if (
+      food === undefined ||
+      entertainment === undefined ||
+      tourTravel === undefined ||
+      fashion === undefined ||
+      academics === undefined ||
+      Budget === undefined
+    ) {
       return res
         .status(400)
-        .json({ message: "Please provide budget, month, and year." });
+        .json({ message: "Please provide all required fields." });
     }
 
     const { userId } = req.user;
@@ -22,16 +36,19 @@ async function setBudget(req, res) {
 
     // Set the budget in the database
     await BudgetRepository.setBudget({
-      userId: userId,
-      Month: month,
-      Year: year,
-      Budget: budget,
+      userId,
+      food,
+      entertainment,
+      "tour/travel": tourTravel,
+      fashion,
+      academics,
+      Budget,
     });
 
     // Success response
     return res
       .status(200)
-      .json({ message: `Budget set for ${month} ${year} successfully.` });
+      .json({ message: `Budget set successfully for the current month.` });
   } catch (error) {
     console.error("Error setting budget:", error);
     return res.status(500).json({ message: "Internal Server Error" });

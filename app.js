@@ -30,7 +30,7 @@ const upload = multer({ storage });
 app.post("/upload", upload.single('img'), (req, res) => {
   console.log("Image Uploading")
   var dis=""
-  const childProcess = spawn('python3', [pythonScript, name]);
+  const childProcess = spawn('python', [pythonScript, name]);
   childProcess.stdout.on('data', (data) => {
     dis=data.toString();
     console.log(data.toString());

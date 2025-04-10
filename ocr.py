@@ -3,7 +3,7 @@ from PIL import Image
 import torch
 import sys
 
-model = DonutModel.from_pretrained("/Users/sajidkhan/Downloads/trained_model")
+model = DonutModel.from_pretrained("./trained_model")
 if torch.cuda.is_available():
     model.half()
     device = torch.device("cuda")
@@ -11,7 +11,7 @@ if torch.cuda.is_available():
 # else:
 #     model.encoder.to(torch.bfloat16)
 model.eval()
-img_path = f'upload/{sys.argv[1]}'
+img_path = 'upload/X00016469671.jpg'
 image = Image.open(img_path).convert("RGB")
 
 output = model.inference(image=image, prompt="<s_data>")

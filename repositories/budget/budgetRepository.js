@@ -26,8 +26,8 @@ class BudgetRepository {
     return await Year(userId, year);
   }
 
-  async updateByMonth(userId, month, year, budget) {
-    return await updateByMonth(userId, month, year, budget);
+  async updateByMonth(userId, month, year, field, value){
+    return await updateByMonth(userId, month, year, field, value);
   }
   async deleteByMonth(userId, month, year) {
     return await deleteByMonth(userId, month, year);

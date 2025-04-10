@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { dateGenerator } = require("../../helpers/date/dateGenerator");
+const { dateGenerator,parseUserDateToUTC } = require("../../helpers/date/dateGenerator");
 
 const categoryEnum = [
   "food",
@@ -35,7 +35,7 @@ const transactionSchema = new mongoose.Schema(
     },
     Date: {
       type: Date,
-      default: Date.now,
+      required:true
     },
     formatedDate: {
       type: String,
@@ -95,6 +95,13 @@ const transactionSchema = new mongoose.Schema(
 // Pre-save middleware to set the default for `From`
 transactionSchema.pre("save", async function (next) {
   try {
+    if(this.Date!==null){
+      this.Date=parseUserDateToUTC(this.Date)
+    }else{
+      this.Date= Date.now();
+    }
+
+
     if (this.isSelfCredit && this.type === "debit") {
       return next(new Error("isSelfCredit cannot be true for a debit transaction."));
     }
@@ -121,11 +128,14 @@ transactionSchema.pre("save", async function (next) {
   }
 });
 
+transactionSchema.pre("find",function(){
+  this.sort({Date:-1});
+})
+
 
 
 // Post-find middleware to ensure formatedDate is up-to-date
 transactionSchema.post("find", function (results) {
-  results.reverse()
   results.forEach((doc) => {
     if (doc.Date instanceof Date) {
       doc.formatedDate = dateGenerator(doc.Date);
