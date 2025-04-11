@@ -8,49 +8,62 @@ async function setBudget(req, res) {
       tourTravel,
       fashion,
       academics,
-      Budget
+      Budget,
     } = req.body;
 
-    // Properly validate for undefined (allows 0)
-    if (
-      food === undefined ||
-      entertainment === undefined ||
-      tourTravel === undefined ||
-      fashion === undefined ||
-      academics === undefined ||
-      Budget === undefined
-    ) {
-      return res
-        .status(400)
-        .json({ message: "Please provide all required fields." });
-    }
-
     const { userId } = req.user;
-
-    // Validate user authentication
     if (!userId) {
-      return res
-        .status(401)
-        .json({ message: "Unauthorized. Please login again." });
+      return res.status(401).json({ message: "Unauthorized. Please login again." });
     }
 
-    // Set the budget in the database
-    await BudgetRepository.setBudget({
-      userId,
-      food,
-      entertainment,
-      "tour/travel": tourTravel,
-      fashion,
-      academics,
-      Budget,
-    });
+    const currentMonth = new Date().toLocaleString("default", { month: "long" });
+    const currentYear = new Date().getFullYear().toString();
 
-    // Success response
-    return res
-      .status(200)
-      .json({ message: `Budget set successfully for the current month.` });
+    const existingBudget = await BudgetRepository.Month(userId, currentMonth, currentYear);
+
+    const budgetData = {
+      ...(food !== undefined && { food }),
+      ...(entertainment !== undefined && { entertainment }),
+      ...(tourTravel !== undefined && { "tour/travel": tourTravel }),
+      ...(fashion !== undefined && { fashion }),
+      ...(academics !== undefined && { academics }),
+      ...(Budget !== undefined && { Budget }),
+    };
+
+    if (existingBudget) {
+      // Partial update is allowed
+      if (Object.keys(budgetData).length === 0) {
+        return res.status(400).json({ message: "No fields provided to update." });
+      }
+
+      await BudgetRepository.updateByMonth(userId, currentMonth, currentYear, budgetData);
+      return res.status(200).json({ message: "Budget updated successfully for the current month." });
+    } else {
+      // Require all fields for new budget
+      const requiredFields = [food, entertainment, tourTravel, fashion, academics, Budget];
+      const allProvided = requiredFields.every((field) => field !== undefined);
+
+      if (!allProvided) {
+        return res.status(400).json({ message: "Please provide all required fields to set the budget." });
+      }
+
+      const newBudgetData = {
+        userId,
+        food,
+        entertainment,
+        "tour/travel": tourTravel,
+        fashion,
+        academics,
+        Budget,
+        Month: currentMonth,
+        Year: currentYear,
+      };
+
+      await BudgetRepository.setBudget(newBudgetData);
+      return res.status(201).json({ message: "Budget set successfully for the current month." });
+    }
   } catch (error) {
-    console.error("Error setting budget:", error);
+    console.error("Error setting/updating budget:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 }

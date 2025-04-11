@@ -2,6 +2,7 @@ const getTransactions = require("./getTransactions");
 const CategorySortedMonth = require("./categorysorted");
 const CategoryMonth = require("./category");
 const getExpenses = require("./totalsum");
+const TopTransactions=require("./TopTransactions")
 const credit=require("./credit")
 const debit=require("./debit")
 class Single {
@@ -28,6 +29,11 @@ class Single {
   async debit(req,res,next){
     return await debit(req,res,next)
   }
+
+  async  TopTransactions(req,res,next){
+    return await TopTransactions(req,res,next);
+  }
+
 }
 
 module.exports = Single;

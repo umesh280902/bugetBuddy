@@ -10,4 +10,5 @@ router.get("/category-sorted", transaction.single.CategorySortedMonth);
 router.get("/expenses",transaction.single.getExpenses)
 router.get("/credit",transaction.single.credit);
 router.get("/debit",transaction.single.debit)
+router.get("/top-transactions",transaction.single.TopTransactions)
 module.exports = router;

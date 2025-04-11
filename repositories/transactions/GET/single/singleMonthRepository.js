@@ -3,12 +3,57 @@ const monthSetter=require("../../../../helpers/month/monthSetter")
 const expenseHelper=require("../../../../helpers/expense/expenseHelper")
 const categoryHelper=require("../../../../helpers/category/categoryHelper")
 const {monthNames}=require("../../../../helpers/date/dateGenerator")
+const mongoose=require("mongoose")
 class SingleMonthRepository {
   async getTransactions(month, year, userId) {
     const transactions = await transactionsModel.find({ userId: userId });
     const transact = monthSetter(transactions, month, year);
     return transact;
   }
+
+  async TopTransactions(month, year, userId) {
+    const transactions = await transactionsModel.aggregate([
+      {
+        $addFields: {
+          transactionMonth: { $dateToString: { format: "%B", date: "$Date" } },
+          transactionYear: { $dateToString: { format: "%Y", date: "$Date" } },
+        },
+      },
+      {
+        $match: {
+          userId: new mongoose.Types.ObjectId(userId),
+          transactionMonth: month,
+          transactionYear: year,
+          type: "debit",
+        },
+      },
+      {
+        $sort: { Amount: -1 },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+  
+    // 🧹 Manual transformation since aggregation returns plain objects
+    const cleanTransactions = transactions.map((ret) => ({
+      Amount: ret.Amount,
+      ...(ret.type === "debit" && { To: ret.To }),
+      ...(ret.type === "credit" && { From: ret.From }),
+      userId: ret.userId,
+      Date: ret.formatedDate ?? require("../../helpers/date/dateGenerator").dateGenerator(ret.Date),
+      category: ret.category,
+      type: ret.type,
+      ...(ret.isSelfCredit && { isSelfCredit: ret.isSelfCredit }),
+    }));
+  
+    return cleanTransactions;
+  }
+  
+  
+  
+
+
   async netExpenses(userId){
     const transactions = await transactionsModel.find({ userId: userId });
     const today = new Date();
@@ -45,5 +90,7 @@ class SingleMonthRepository {
 
 
 }
+
+
 
 module.exports=SingleMonthRepository
