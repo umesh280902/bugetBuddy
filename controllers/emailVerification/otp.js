@@ -72,6 +72,7 @@ const verifyOtp = async (req, res) => {
         return res.status(StatusCodes.CREATED).json({
             message: "User successfully created",
             token: token,
+            userId: newUser._id
         });
 
     } catch (error) {
