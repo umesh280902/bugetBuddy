@@ -7,11 +7,7 @@ async function Month(userId, month, year) {
             Month: month,
             Year: year
         });
-
-        if (!budget) {
-            return `No budget found for the month: ${month} and year: ${year}`;
-        }
-        return budget;
+        return budget||null;
     } catch (error) {
         throw new Error(`Error finding budget for the month: ${month} and year: ${year} - ${error.message}`);
     }

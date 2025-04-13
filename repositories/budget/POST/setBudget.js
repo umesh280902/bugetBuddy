@@ -4,6 +4,7 @@ async function setBudget(budget){
     try{
         const newBudget=new budgetModel(budget);
         const savedBudget=await newBudget.save();
+        console.log(savedBudget)
         return savedBudget
     }catch(error){
         throw new Error(`Error setting transaction: ${error.message}`);

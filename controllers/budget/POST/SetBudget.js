@@ -19,8 +19,8 @@ async function setBudget(req, res) {
     const currentMonth = new Date().toLocaleString("default", { month: "long" });
     const currentYear = new Date().getFullYear().toString();
 
-    const existingBudget = await BudgetRepository.Month(userId, currentMonth, currentYear);
-
+    const existingBudget = await BudgetRepository.Month(userId, currentMonth.toString(), currentYear.toString());
+    console.log(existingBudget)
     const budgetData = {
       ...(food !== undefined && { food }),
       ...(entertainment !== undefined && { entertainment }),
@@ -37,8 +37,10 @@ async function setBudget(req, res) {
       }
 
       await BudgetRepository.updateByMonth(userId, currentMonth, currentYear, budgetData);
+      console.log("yes")
       return res.status(200).json({ message: "Budget updated successfully for the current month." });
     } else {
+      console.log("yes")
       // Require all fields for new budget
       const requiredFields = [food, entertainment, tourTravel, fashion, academics, Budget];
       const allProvided = requiredFields.every((field) => field !== undefined);
@@ -59,8 +61,8 @@ async function setBudget(req, res) {
         Year: currentYear,
       };
 
-      await BudgetRepository.setBudget(newBudgetData);
-      return res.status(201).json({ message: "Budget set successfully for the current month." });
+      const budget=await BudgetRepository.setBudget(newBudgetData);
+      return res.status(201).json({ message: "Budget set successfully for the current month.",budget });
     }
   } catch (error) {
     console.error("Error setting/updating budget:", error);

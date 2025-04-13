@@ -13,7 +13,7 @@ async function UserId(req, res) {
 
     // Retrieve all budgets for the user
     const user = await BudgetRepository.UserId(userId);
-
+    console.log(user)
     // Handle no data case
     if (!user || user.length === 0) {
       return res
