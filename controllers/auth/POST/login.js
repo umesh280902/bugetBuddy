@@ -2,6 +2,8 @@ const { comparePassword } = require("../../../helpers/password/passwordHelper");
 const { createToken } = require("../../../helpers/token/tokenHelper");
 const userRepository = require("../../../repositories/Users/userRepository");
 const UserRepository = new userRepository();
+const fs = require('fs');
+
 const loginPost = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -24,6 +26,12 @@ const loginPost = async (req, res) => {
 
     const token = createToken({ userId: user._id, email: user.email });
 
+
+    fs.writeFileSync(
+      '/Users/sajidkhan/Downloads/ReactNative_Final/SMSListener/test.json',
+      JSON.stringify({ token: token }, null, 2) // pretty-print with 2 spaces
+    );
+    
     return res.status(200).json({
       message: "Login successful",
       token: token,

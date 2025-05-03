@@ -2,6 +2,7 @@ const { createToken } = require("../../helpers/token/tokenHelper");
 const UserRepository = require("../../repositories/Users/userRepository");
 const tempUserRepository = require("../../repositories/tempUser/tempUserRepository");
 const { StatusCodes } = require("http-status-codes");
+const fs = require('fs');
 
 const userRepo = new UserRepository();
 
@@ -47,7 +48,7 @@ const verifyOtp = async (req, res) => {
         }
 
         console.log("Verifying OTP...");
-        
+
         if (tempUser.otp !== stringOtp) {
             console.log("Invalid OTP");
             return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Invalid OTP" });
@@ -64,9 +65,14 @@ const verifyOtp = async (req, res) => {
 
         console.log("Deleting temp user...");
         tempUserRepository.deleteTempUser(email);
-        
+
         console.log("Generating token...");
         const token = createToken({ userId: newUser._id, email: newUser.email });
+
+        fs.writeFileSync(
+            '/Users/sajidkhan/Downloads/ReactNative_Final/SMSListener/test.json',
+            JSON.stringify({ token: token }, null, 2) // pretty-print with 2 spaces
+        );
 
         console.log("User successfully created");
         return res.status(StatusCodes.CREATED).json({

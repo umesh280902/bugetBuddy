@@ -78,6 +78,39 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 
+app.post("/parse-message", (req, res) => {
+  const { message } = req.body;
+  console.log(message);
+  if (!message) {
+    return res.status(400).json({ error: "Message is required." });
+  }
+
+  const pythonScript = './message.py';
+  let output = "";
+
+  const childProcess = spawn('python3', [pythonScript, message]);
+
+  childProcess.stdout.on('data', (data) => {
+    output += data.toString();
+  });
+
+  childProcess.stderr.on('data', (data) => {
+    console.error("Python Error:", data.toString());
+  });
+
+  childProcess.on('close', (code) => {
+    console.log(`Message.py exited with code ${code}`);
+    try {
+      const parsed = JSON.parse(output);
+      res.json(parsed);
+    } catch (err) {
+      console.error("JSON parsing error:", err.message);
+      res.status(500).json({ error: "Failed to parse message output." });
+    }
+  });
+});
+
+
 app.use("/auth", authRouter);
 app.use("/email-verification",verificationRouter)
 app.use("/transactions", transactionRouter);
